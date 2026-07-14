@@ -13,7 +13,7 @@ const ibmPlexSans = localFont({
 })
 const bebasNeue = localFont({
   src: [
-    { path: '/fonts/BebasNeue-Regular.ttf', weight: '400', style: "normal" }
+    { path: './fonts/BebasNeue-Regular.ttf', weight: '400', style: "normal" }
   ],
   variable: "--bebas-neue"
 })
@@ -31,7 +31,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${ibmPlexSans.className} ${bebasNeue.variable} h-full antialiased`}
+      className={`${ibmPlexSans.className} ${bebasNeue.variable} antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
