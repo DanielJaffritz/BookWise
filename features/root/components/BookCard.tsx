@@ -28,3 +28,4 @@ export default function BookCard({ id, title, genre, coverColor, coverUrl, isLoa
   )
 }
 
+
