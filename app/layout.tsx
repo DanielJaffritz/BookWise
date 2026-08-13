@@ -3,6 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import localFont from "next/font/local";
 import { Toaster } from "@/components/ui/toast";
+import { SessionProvider } from "next-auth/react"
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 const ibmPlexSans = localFont({
   src: [
@@ -24,19 +27,22 @@ export const metadata: Metadata = {
   description: "BookWise is a book borrowing university library management solution.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
   return (
     <html
       lang="en"
-      className={`${ibmPlexSans.className} ${bebasNeue.variable} antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}
-        <Toaster />
-      </body>
+      <SessionProvider session={session}>
+        <body className={`${ibmPlexSans.className} ${bebasNeue.variable} antialiased min-h-full flex flex-col`}>
+          {children}
+          <Toaster />
+        </body>
+      </SessionProvider>
     </html>
   );
 }

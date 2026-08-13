@@ -8,14 +8,34 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { fieldNames, fieldTypes } from "@/constants";
 import ImageUpload from "./ImageUpload";
+import { toast } from "@/components/ui/toast";
+import { useRouter } from "next/navigation";
 
 export default function AuthForm<T extends FieldValues>({ type, schema, defaultValues, onSubmit }: AuthProps<T>) {
+  const router = useRouter();
   const form: UseFormReturn<T> = useForm({
     resolver: zodResolver(schema),
     defaultValues: defaultValues as DefaultValues<T>
   });
   const isSignIn = type === "SIGN_IN";
-  const handleSubmit: SubmitHandler<T> = async (data) => { }
+  const handleSubmit: SubmitHandler<T> = async (data) => {
+    const result = await onSubmit(data);
+    if (result.success) {
+      toast.add({
+        title: "Success",
+        description: isSignIn ? "You have succesfully signed in." :
+          "You have succesfully signed up",
+      })
+      router.push("/")
+    } else {
+      toast.add({
+        title: `Error ${isSignIn ? "signing in" : "Signing up"}`,
+        description: result.error ?? "An error occurred.",
+        type: "destructive"
+
+      })
+    }
+  }
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-2xl font-semibold text-white">

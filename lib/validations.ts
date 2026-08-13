@@ -2,8 +2,8 @@ import { z } from "zod";
 export const signUpSchema = z.object({
   fullName: z.string().min(3),
   email: z.string().email(),
-  UniversityId: z.coerce.number(),
-  UniversityCard: z.string().nonempty("univesity card is required"),
+  universityId: z.coerce.number(),
+  universityCard: z.string().nonempty("univesity card is required"),
   password: z.string().min(8)
 })
 export const signInSchema = z.object({

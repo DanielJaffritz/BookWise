@@ -7,3 +7,10 @@ export interface AuthProps<T extends FieldValues> {
   defaultValues: T;
   onSubmit: (data: T) => Promise<{ success: boolean, error?: string }>;
 }
+export interface authCredentials {
+  fullName: string;
+  email: string;
+  password: string;
+  universityId: number;
+  universityCard: string;
+}

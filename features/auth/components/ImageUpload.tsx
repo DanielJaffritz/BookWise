@@ -12,7 +12,6 @@ export default function ImageUpload({ onFileChange }: { onFileChange: (filePath:
   const abortController = new AbortController();
   async function authenticator() {
     try {
-      console.log("mamaguevo")
       const response = await fetch(`/api/auth/imagekit`)
       if (!response.ok) {
         const errorText = await response.text()
@@ -23,7 +22,7 @@ export default function ImageUpload({ onFileChange }: { onFileChange: (filePath:
       const publicKey = config.env.imagekit.publicKey
       return { token, expire, signature, publicKey };
     } catch (error: any) {
-      throw new Error("hijueputa")
+      throw new Error("unexpected")
     }
   }
   async function handleUpload() {
@@ -59,6 +58,7 @@ export default function ImageUpload({ onFileChange }: { onFileChange: (filePath:
       const man = uploadResponse.filePath!
 
       setFile({ filePath: man })
+      onFileChange(man)
     } catch (error) {
       if (error instanceof ImageKitAbortError) {
         console.error("upload aborted:", error.reason);
@@ -80,7 +80,6 @@ export default function ImageUpload({ onFileChange }: { onFileChange: (filePath:
   }
   const onSuccess = (res: any) => {
     handleUpload()
-    onFileChange(res.filePath)
     if (file?.filePath === "Try Again") {
       toast.add({
         title: "image not uploaded",
@@ -89,7 +88,7 @@ export default function ImageUpload({ onFileChange }: { onFileChange: (filePath:
     } else {
       toast.add({
         title: `image upload succesfully`,
-        description: `${res.filePath} uploaded`
+        description: `${file?.filePath} uploaded`
       })
     }
   }
