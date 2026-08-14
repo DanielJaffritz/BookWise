@@ -4,9 +4,15 @@ import { prisma } from "@/lib/prisma";
 import { authCredentials } from "../types/types";
 import { hash } from "bcryptjs";
 import { signIn } from "@/lib/auth";
+import { headers } from "next/headers";
+import ratelimit from "@/lib/ratelimit";
+import { redirect } from "next/navigation";
 
 export const signInWithCredentials = async (params: Pick<authCredentials, "email" | "password">) => {
   const { email, password } = params;
+  const ip = (await headers()).get('x-forwarded-for') || "127.0.0.1";
+  const { success } = await ratelimit.limit(ip);
+  if (!success) redirect("/too-fast");
 
   try {
     const result = await signIn('credentials', {
@@ -27,6 +33,9 @@ export const signInWithCredentials = async (params: Pick<authCredentials, "email
 
 export async function signUp(params: authCredentials) {
   const { fullName, email, universityId, password, universityCard } = params;
+  const ip = (await headers()).get('x-forwarded-for') || "127.0.0.1";
+  const { success } = await ratelimit.limit(ip);
+  if (!success) redirect("/too-fast");
 
   const existingUser = await prisma.user.findUnique({ where: { email } })
   if (existingUser) {
