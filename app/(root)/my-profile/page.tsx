@@ -12,7 +12,7 @@ export default function MyProfile() {
       }}
         className="mb-10"
       >
-        <Button>Logout</Button>
+        <button>Logout</button>
       </form>
       <BookList title="borrowed books" books={sampleBooks} />
     </>
