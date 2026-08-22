@@ -1,5 +1,5 @@
 interface Book {
-  id: number;
+  id: string;
   title: string;
   author: string;
   genre: string;
@@ -11,7 +11,6 @@ interface Book {
   coverUrl: string;
   videoUrl: string;
   summary: string;
-  isLoanedBook?: boolean;
 }
 interface BookCoverProps {
   className?: string;
@@ -25,4 +24,8 @@ interface BookListProps {
   title: string;
   books: Book[];
   containerClassName?: string;
+}
+interface BorrowBookParams {
+  userId: string
+  bookId: string
 }

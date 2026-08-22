@@ -1,0 +1,79 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+
+@theme inline {
+  --color-primary: #e7c9a5;
+  --color-app-primary-admin: #25388c;
+  --color-app-green: #027a48;
+  --color-app-green-100: #ecfdf3;
+  --color-app-green-400: #4c7b62;
+  --color-app-green-500: #2cc171;
+  --color-app-red: #ef3a4b;
+  --color-app-red-400: #F46f70;
+  --color-app-red-500: #e27233;
+  --color-app-blue: #0089f1;
+  --color-app-light-100: #d6e0ff;
+  --color-app-light-200: #eed1ac;
+  --color-app-light-300: #f8f8ff;
+  --color-app-light-400: #edf1f1;
+  --color-app-light-500: #8d8d8d;
+  --color-app-light-600: #f9fafb;
+  --color-app-light-700: #e2e8f0;
+  --color-app-light-800: #f8fafc;
+  --color-app-dark-100: #16191e;
+  --color-app-dark-200: #3a354e;
+  --color-app-dark-300: #232839;
+  --color-app-dark-400: #1e293b;
+  --color-app-dark-500: #0f172a;
+  --color-app-dark-600: #333c5c;
+  --color-app-dark-700: #464f6f;
+  --color-app-dark-800: #132230;
+  --color-app-gray: #cbd5e1;
+}
+
+@layer base {
+  .back-btn {
+    @apply p-3 rounded-md mb-10 w-fit border border-app-light-300 bg-white text-xs font-medium text-app-dark-200 hover:bg-app-light-300;
+  }
+
+  .admin-container {
+    @apply flex w-[calc(100%-264px)] flex-1 flex-col bg-app-light-300 p-5 xl:p-10;
+  }
+
+  .admin-sidebar {
+    @apply sticky left-0 top-0 flex h-dvh flex-col justify-between bg-white px-5 pb-5 pt-10;
+  }
+
+  .admin-sidebar .logo {
+    @apply flex flex-row items-center gap-2 border-b border-dashed border-app-primary-admin/20 pb-10 max-md:justify-center;
+  }
+
+  .admin-sidebar .logo h1 {
+    @apply text-2xl font-semibold text-app-primary-admin max-md:hidden;
+  }
+
+  .admin-sidebar .link {
+    @apply flex flex-row items-center w-full gap-2 rounded-lg px-5 py-3.5 max-md:justify-center;
+  }
+
+  .admin-sidebar .link p {
+    @apply text-base font-medium max-md:hidden;
+  }
+
+  .admin-sidebar .user {
+    @apply my-8 flex w-full flex-row gap-2 rounded-full border border-app-light-400 px-6 py-2 shadow-sm max-md:px-2;
+  }
+
+  .admin-header {
+    @apply flex lg:items-end items-start justify-between lg:flex-row flex-col gap-5 sm:mb-10 mb-5;
+  }
+
+  .book-form_input {
+    @apply min-h-14 border border-gray-100 bg-app-light-600 text-base font-semibold placeholder:font-normal placeholder:text-slate-500
+  }
+
+  .book-form_btn {
+    @apply bg-app-light-300 rounded-md text-app-primary-admin font-semibold hover:bg-app-light-300/95
+  }
+}

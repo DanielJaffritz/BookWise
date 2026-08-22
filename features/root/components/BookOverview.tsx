@@ -1,8 +1,20 @@
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import BookCover from "./BookCover";
+import BorrowButton from "./BorrowButton";
+import { prisma } from "@/lib/prisma";
+interface Props extends Book {
+  userId: string;
+}
 
-export default function BookOverview({ title, author, genre, rating, totalCopies, availableCopies, description, coverColor, coverUrl }: Book) {
+export default async function BookOverview({ id, title, author, genre, rating, totalCopies, availableCopies, description, coverColor, coverUrl, userId }: Props) {
+  const user = await prisma.user.findUnique({
+    where: { id: userId }
+  })
+  if (!user) return null;
+  const borrowingEligibility = {
+    isEligible: availableCopies > 0 && user.status === 'APPROVED',
+    message: availableCopies <= 0 ? "Book is not available" : "You are not elegible for borrowing this book"
+  }
   return (
     <section className="book-overview">
       <div className="flex flex-1 flex-col gap-5">
@@ -30,10 +42,8 @@ export default function BookOverview({ title, author, genre, rating, totalCopies
           </p>
         </div>
         <p className="book-description">{description}</p>
-        <Button className="book-overview_btn">
-          <Image src="/icons/book.svg" alt="book" width={20} height={20} />
-          <p className="font-bebas-neue text-xl text-app-dark-100">Borrow</p>
-        </Button>
+        <BorrowButton bookId={id} userId={userId} borrowingEligibility={borrowingEligibility} />
+
       </div>
       <div className="relative flex flex-1 justify-center">
         <div className="relative">

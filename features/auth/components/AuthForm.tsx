@@ -7,9 +7,9 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { fieldNames, fieldTypes } from "@/constants";
-import ImageUpload from "./ImageUpload";
 import { toast } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
+import FileUpload from "../../../components/FileUpload";
 
 export default function AuthForm<T extends FieldValues>({ type, schema, defaultValues, onSubmit }: AuthProps<T>) {
   const router = useRouter();
@@ -55,7 +55,7 @@ export default function AuthForm<T extends FieldValues>({ type, schema, defaultV
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor={field.name}>{fieldNames[field.name as keyof typeof fieldNames]}</FieldLabel>
                 {field.name === "universityCard" ? (
-                  <ImageUpload onFileChange={field.onChange} />
+                  <FileUpload type="image" accept="image/*" placeholder="upload your id" folder="ids" variant="dark" onFileChange={field.onChange} />
                 ) : (
                   <Input className="form-input bg-app-dark-300" required type={fieldTypes[field.name as keyof typeof fieldTypes]} {...field} id={field.name} aria-invalid={fieldState.invalid} />
                 )}

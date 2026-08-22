@@ -50,7 +50,7 @@ export async function signUp(params: authCredentials) {
         email,
         universityId,
         password: hashedPassword,
-        universityCard
+        universityCard,
       }
     });
     await signInWithCredentials({ email, password })

@@ -5,7 +5,7 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../generated/prisma"
+  output   = "../lib/generated/prisma"
 }
 
 datasource db {
@@ -23,6 +23,37 @@ model User {
   role             Role     @default(USER)
   lastActivityDate DateTime @default(now())
   createdAt        DateTime @default(now())
+  borrows          Borrow[]
+}
+
+model Book {
+  id              String   @id @unique @default(uuid())
+  title           String
+  author          String
+  genre           String
+  rating          Int
+  coverUrl        String
+  coverColor      String
+  description     String
+  totalCopies     Int      @default(1)
+  availableCopies Int      @default(0)
+  videoUrl        String
+  summary         String
+  createdAt       DateTime @default(now())
+  borrows         Borrow[]
+}
+
+model Borrow {
+  id         String       @id @unique @default(uuid())
+  userId     String
+  bookId     String
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book       Book         @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  borrowDate DateTime     @default(now())
+  dueDate    DateTime
+  returnDate DateTime?
+  status     BorrowStatus @default(BORROWED)
+  createdAt  DateTime     @default(now())
 }
 
 enum Status {

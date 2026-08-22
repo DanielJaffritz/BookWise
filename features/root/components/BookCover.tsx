@@ -1,6 +1,8 @@
+"use client"
 import { cn } from "@/lib/utils"
-import Image from "next/image"
 import BookCoverSvg from "./BookCoverSvg"
+import { Image } from "@imagekit/next"
+import config from "@/lib/config"
 
 export default function BookCover({ className, variant = "regular", coverColor = "#012B48", coverUrl = "https://placehold.co/400x600.png" }: BookCoverProps) {
   const variants: Record<BookCoverVariant, string> = {
@@ -15,7 +17,7 @@ export default function BookCover({ className, variant = "regular", coverColor =
 
       <BookCoverSvg coverColor={coverColor} />
       <div className="absolute z-10" style={{ left: "12%", width: "87.5%", height: "88%" }}>
-        <Image src={coverUrl} alt="Book cover" fill className="rounded-sm object-fill" />
+        <Image loading="lazy" urlEndpoint={config.env.imagekit.urlEndpoint} src={coverUrl} alt="Book cover" fill className="rounded-sm object-fill" />
       </div>
     </div>
   )

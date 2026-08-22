@@ -1,6 +1,7 @@
 import BookCard from "./BookCard";
 
 export default function BookList({ title, books, containerClassName }: BookListProps) {
+  if (books.length < 2) return;
   return (
     <section className={containerClassName}>
       <h2 className="font-bebas-neue text-4xl text-app-light-100">{title}</h2>

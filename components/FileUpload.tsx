@@ -1,15 +1,30 @@
 "use client"
 import { toast } from "@/components/ui/toast";
 import config from "@/lib/config"
-import { Image as IKImage, ImageKitAbortError, ImageKitInvalidRequestError, ImageKitProvider, ImageKitServerError, ImageKitUploadNetworkError, upload } from "@imagekit/next"
+import { cn } from "@/lib/utils";
+import { Image as IKImage, ImageKitAbortError, ImageKitInvalidRequestError, ImageKitProvider, ImageKitServerError, ImageKitUploadNetworkError, upload, Video } from "@imagekit/next"
 import Image from "next/image";
 import { useRef, useState } from "react"
 
-export default function ImageUpload({ onFileChange }: { onFileChange: (filePath: string) => void; }) {
+interface Props {
+  type: 'image' | 'video';
+  accept: string;
+  placeholder: string;
+  folder: string;
+  variant: 'dark' | 'light'
+  onFileChange: (filePath: string) => void;
+}
+
+export default function FileUpload({ type, accept, placeholder, folder, variant, onFileChange }: Props) {
   const [progress, setProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<{ filePath: string } | null>(null)
   const abortController = new AbortController();
+  const styles = {
+    button: variant === 'dark' ? 'bg-app-dark-300' : 'bg-app-light-600 border-gray-100 border',
+    placeholder: variant === 'dark' ? 'text-app-light-100' : 'text-slate-500',
+    text: variant === 'dark' ? "text-app-light-100" : "text-app-dark-400"
+  }
   async function authenticator() {
     try {
       const response = await fetch(`/api/auth/imagekit`)
@@ -82,21 +97,41 @@ export default function ImageUpload({ onFileChange }: { onFileChange: (filePath:
     handleUpload()
     if (file?.filePath === "Try Again") {
       toast.add({
-        title: "image not uploaded",
+        title: `${type} not uploaded`,
         description: "An unexpected error ocurred, Try again"
       })
     } else {
       toast.add({
-        title: `image upload succesfully`,
+        title: `${type} uploaded succesfully`,
         description: `${file?.filePath} uploaded`
       })
     }
   }
 
+  const onValidate = (file: File) => {
+    if (type === "image") {
+      if (file.size > 20 * 1024 * 1024) {
+        toast.add({
+          title: "File size too large",
+          description: "Please upload a file that is less than 20MB in size",
+        })
+        return false
+      }
+    } else if (type === "video") {
+      if (file.size > 50 * 1024 * 1024) {
+        toast.add({
+          title: "File size too large",
+          description: "Please upload a file that is less than 50MB in size",
+        })
+        return false
+      }
+    }
+    return true
+  }
   return (
     <>
-      <input className="hidden" type="file" ref={fileInputRef} onChange={onSuccess} />
-      <button type="button" className="upload-btn" onClick={
+      <input accept={accept} className="hidden" type="file" ref={fileInputRef} onChange={onSuccess} />
+      <button type="button" className={cn('upload-btn', styles.button)} onClick={
         (e) => {
           e.preventDefault();
           if (fileInputRef.current) {
@@ -105,11 +140,35 @@ export default function ImageUpload({ onFileChange }: { onFileChange: (filePath:
         }
       }>
         <Image className="object-contain" src="/icons/upload.svg" alt="upload-icon" width={20} height={20} />
-        <p className="text-base text-app-light-100">Upload a File</p>
+        <p className={cn("text-base", styles.placeholder)}>{placeholder}</p>
 
-        {file && <p className="upload-filename">{file.filePath}</p>}
+        {file && <p className={cn('upload-filename', styles.text)}>{file.filePath}</p>}
       </button>
-      {file && <IKImage urlEndpoint={config.env.imagekit.urlEndpoint} alt={file.filePath} src={file.filePath} width={500} height={300} />}
+      {progress > 0 && progress !== 100 && (
+        <div className="w-full rounded-full bg-green-200">
+          <div className="progress" style={{ width: `${progress}%` }}>
+            {progress}%
+          </div>
+        </div>
+      )}
+      {file && (
+        (type === 'image' ? (
+          <IKImage
+            urlEndpoint={config.env.imagekit.urlEndpoint}
+            alt={file.filePath} src={file.filePath}
+            width={500}
+            height={300}
+          />
+        ) : type === "video" ? (
+          <Video
+            urlEndpoint={config.env.imagekit.urlEndpoint}
+            src={file.filePath}
+            controls={true}
+            className="h-96 w-ful rounded-xl"
+          />
+        ) : null)
+      )}
+
     </>
 
   )
