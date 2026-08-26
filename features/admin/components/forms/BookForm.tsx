@@ -11,33 +11,25 @@ import { bookSchema } from "@/lib/validations";
 import { Textarea } from "@/components/ui/textarea";
 import FileUpload from "@/components/FileUpload";
 import ColorPicker from "@/components/ColorPicker";
-import { createBook } from "../../actions/book";
+import { createBook, updateBook } from "../../actions/book";
 import { toast } from "@/components/ui/toast";
 
-export default function BookForm({ type, ...book }: Props) {
+export default function BookForm({ defaultValues, type, id, ...book }: Props) {
   const router = useRouter();
   const form = useForm<z.infer<typeof bookSchema>>({
     resolver: zodResolver(bookSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      author: "",
-      genre: "",
-      rating: 1,
-      totalCopies: 1,
-      coverUrl: "",
-      coverColor: "",
-      videoUrl: "",
-      summary: "",
-    }
+    defaultValues
+
   });
   async function onSubmit(values: z.infer<typeof bookSchema>) {
 
-    const result = await createBook(values);
+
+    const updated = { ...values, id }
+    const result = type === "create" ? await createBook(values) : await updateBook(updated)
     if (result.success) {
       toast.add({
         title: 'success',
-        description: 'Book created successfully'
+        description: `Book ${type}ed successfully`
       })
 
       router.push(`/admin/books/${result?.data?.id}`)

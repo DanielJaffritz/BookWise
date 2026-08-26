@@ -1,6 +1,12 @@
+import Count from "@/features/admin/components/Count";
+import Requests from "@/features/admin/components/Requests";
+
 export default function Admin() {
   return (
-    <div>Admin Dashboard</div>
+    <div>
+      <Count />
+      <Requests />
+    </div>
   )
 }
 

@@ -6,7 +6,14 @@ import { signOut } from "@/lib/auth";
 export default function MyProfile() {
   return (
     <>
-
+      <form action={async () => {
+        'use server';
+        await signOut();
+      }}
+        className="mb-10"
+      >
+        <Button type="submit">Logout</Button>
+      </form>
       <BookList title="borrowed books" books={sampleBooks} />
     </>
   )

@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import BookTable from "@/features/admin/components/BookTable";
 import Link from "next/link";
 
 export default function Books() {
@@ -13,7 +14,7 @@ export default function Books() {
         </Button>
       </div>
       <div className="mt-7 w-full overflow-hidden">
-        <p>table</p>
+        <BookTable />
       </div>
     </section>
   )

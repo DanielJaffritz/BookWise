@@ -1,0 +1,33 @@
+import BookForm from "@/features/admin/components/forms/BookForm";
+import { prisma } from "@/lib/prisma";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+
+export default async function Edit({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const book = await prisma.book.findUnique({
+    where: { id }
+  })
+  if (!book) redirect("/404")
+  const defaultValues = {
+    title: book.title,
+    description: book.description,
+    author: book.author,
+    genre: book.genre,
+    rating: book.rating,
+    totalCopies: book.totalCopies,
+    coverUrl: book.coverColor,
+    coverColor: book.coverColor,
+    videoUrl: book.videoUrl,
+    summary: book.summary,
+  }
+  return (
+    <>
+      <Link className="back-btn" href="/admin/books">Go back</Link>
+      <section>
+        <BookForm defaultValues={defaultValues} type="update" id={book.id} />
+      </section>
+    </>
+  )
+}
+

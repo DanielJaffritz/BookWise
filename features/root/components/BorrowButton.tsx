@@ -15,9 +15,8 @@ interface Props extends BorrowBookParams {
 
 export default function BorrowButton({ bookId, userId, borrowingEligibility }: Props) {
   const { isEligible, message } = borrowingEligibility;
-  const router = useRouter()
   const [borrowing, setBorrowing] = useState(false)
-  async function handleBorrow() {
+  const handleBorrow = async () => {
     if (!isEligible) {
       toast.add({
         title: "Error",
@@ -26,13 +25,20 @@ export default function BorrowButton({ bookId, userId, borrowingEligibility }: P
     }
     setBorrowing(true)
     try {
-      const result = await borrowBook(bookId, userId);
+      const result = await borrowBook({ bookId, userId });
       if (result.success) {
         toast.add({
           title: "Success",
-          description: "result.error"
+          description: "book borrowed succesfully"
         })
+      } else {
+        toast.add({
+          title: "Error",
+          description: "An error occurred menol"
+        })
+        console.log(result.error)
       }
+
     } catch (error) {
       toast.add({
         title: "Error",

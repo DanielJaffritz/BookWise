@@ -3,15 +3,17 @@
 import { prisma } from "@/lib/prisma";
 import dayjs from "dayjs"
 
-export async function borrowBook(userId: string, bookId: string) {
+export async function borrowBook({ userId, bookId }: BorrowBookParams) {
 
   try {
+
+    console.log("mamin")
     const book = await prisma.book.findUnique({
       where: { id: bookId },
       select: { availableCopies: true }
     })
     if (!book?.availableCopies || book.availableCopies <= 0) return { success: false, error: "No available copies" }
-    const dueDate = dayjs().add(7, "day").toDate().toDateString()
+    const dueDate = dayjs().add(7, "day").toDate()
     const record = await prisma.borrow.create({
       data: {
         userId,
@@ -26,10 +28,10 @@ export async function borrowBook(userId: string, bookId: string) {
     })
     return {
       success: true,
-      data: record
+      data: JSON.parse(JSON.stringify(record))
     }
   } catch (error) {
     console.log(error)
-    return { success: false, error: "An error occurred while borrowing the book" }
+    return { success: false, error: error }
   }
 }
