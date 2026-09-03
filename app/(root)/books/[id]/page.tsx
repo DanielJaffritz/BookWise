@@ -13,11 +13,10 @@ export default async function Book({ params }: { params: Promise<{ id: string }>
     .where({ userId: session?.user?.id })
     .where({ bookId: id })
     .where({ status: "BORROWED" }).all()
-  const isBorrowed = borrow.length >= 1;
   if (!bookDetails) redirect("/404")
   return (
     <>
-      <BookOverview {...bookDetails} userId={session?.user?.id as string} isBorrowed={isBorrowed} />
+      <BookOverview {...bookDetails} userId={session?.user?.id as string}/>
       <div className="book-details">
         <div className="flex-[1.5]">
           <section className="mt-10 flex flex-col gap-7">
