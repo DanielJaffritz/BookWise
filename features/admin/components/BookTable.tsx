@@ -1,15 +1,13 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import BookCover from "@/features/root/components/BookCover";
-import { prisma } from "@/lib/prisma";
 import { format } from "date-fns"
 import Image from "next/image";
 import Link from "next/link";
 import RequestDialog from "./RequestDialog";
+import { db } from "@/prisma/db";
 
 export default async function BookTable({ }) {
-  const books = await prisma.book.findMany({
-    orderBy: { createdAt: "desc" }
-  })
+  const books = await db.orm.public.Book.orderBy((p) => p.createdAt.desc()).all()
   return (
     <Table>
       <TableHeader className="table-header">
@@ -34,7 +32,7 @@ export default async function BookTable({ }) {
             </TableCell>
             <TableCell>{item.author}</TableCell>
             <TableCell>{item.genre}</TableCell>
-            <TableCell>{format(item.createdAt.toDateString(), "MMM d yyyy")}</TableCell>
+            <TableCell>{format(item.createdAt, "MMM d yyyy")}</TableCell>
             <TableCell className="">
               <div className="flex flex-row items-center gap-3">
                 <Link

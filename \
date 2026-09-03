@@ -1,0 +1,37 @@
+import { Button } from "@/components/ui/button";
+import { sampleBooks } from "@/constants";
+import BookList from "@/features/root/components/BookList";
+import { auth, signOut } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { db } from "@/prisma/db";
+
+export default async function MyProfile() {
+  const session = await auth()
+  const books = await prisma.borrow.findMany({
+    where: {
+      AND: [
+        { userId: session?.user?.id },
+        { status: "BORROWED" }
+      ]
+    },
+    include: { book: true }
+  })
+  const borrows = await db.orm.public.User.where({
+    id: session?.user?.id
+  }).include("borrows").first()
+  console.log(borrows.borrows)
+  return (
+    <>
+      <form action={async () => {
+        'use server';
+        await signOut();
+      }}
+        className="mb-10"
+      >
+        <Button type="submit">Logout</Button>
+      </form>
+      <BookList title="borrowed books" books={borrows.borrows} />
+    </>
+  )
+}
+

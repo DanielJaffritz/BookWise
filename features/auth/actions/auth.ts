@@ -1,12 +1,13 @@
 "use server"
 
-import { prisma } from "@/lib/prisma";
 import { authCredentials } from "../types/types";
 import { hash } from "bcryptjs";
 import { signIn } from "@/lib/auth";
 import { headers } from "next/headers";
 import ratelimit from "@/lib/ratelimit";
 import { redirect } from "next/navigation";
+import { db } from "@/prisma/db";
+import config from "@/lib/config";
 
 export const signInWithCredentials = async (params: Pick<authCredentials, "email" | "password">) => {
   const { email, password } = params;
@@ -37,21 +38,18 @@ export async function signUp(params: authCredentials) {
   const { success } = await ratelimit.limit(ip);
   if (!success) redirect("/too-fast");
 
-  const existingUser = await prisma.user.findUnique({ where: { email } })
+  const existingUser = await db.orm.public.User.where({
+    email
+  }).first()
   if (existingUser) {
     return { success: false, error: "User already exists" }
   }
+
   const hashedPassword = await hash(password, 10)
 
   try {
-    await prisma.user.create({
-      data: {
-        fullName,
-        email,
-        universityId,
-        password: hashedPassword,
-        universityCard,
-      }
+    await db.orm.public.User.create({
+      fullName, email, universityId, password: hashedPassword, universityCard
     });
     await signInWithCredentials({ email, password })
     return { success: true }

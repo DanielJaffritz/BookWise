@@ -1,13 +1,11 @@
 import BookInfo from "@/features/admin/components/BookInfo"
-import { prisma } from "@/lib/prisma"
+import { db } from "@/prisma/db"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 
 export default async function BookID({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const bookDetails = await prisma.book.findUnique({
-    where: { id }
-  })
+  const bookDetails = await db.orm.public.Book.first({id});
 
   if (!bookDetails) redirect("/404")
   return (

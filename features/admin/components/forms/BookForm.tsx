@@ -58,7 +58,7 @@ export default function BookForm({ defaultValues, type, id, ...book }: Props) {
         control={form.control}
         render={({ field }) => (
           <Field className="text-base font-normal text-app-dark-500">
-            <FieldLabel htmlFor={field.name}>Book</FieldLabel>
+            <FieldLabel htmlFor={field.name}>Book Author</FieldLabel>
             <Input required placeholder="Book Author" {...field} className="book-form-input" />
           </Field>
         )}
@@ -68,7 +68,7 @@ export default function BookForm({ defaultValues, type, id, ...book }: Props) {
         control={form.control}
         render={({ field }) => (
           <Field className="text-base font-normal text-app-dark-500">
-            <FieldLabel htmlFor={field.name}>Book</FieldLabel>
+            <FieldLabel htmlFor={field.name}>Book Genre</FieldLabel>
             <Input required placeholder="Book genre" {...field} className="book-form-input" />
           </Field>
         )}
@@ -138,12 +138,12 @@ export default function BookForm({ defaultValues, type, id, ...book }: Props) {
         control={form.control}
         render={({ field }) => (
           <Field className="text-base font-normal text-app-dark-500">
-            <FieldLabel htmlFor={field.name}>Book Description</FieldLabel>
+            <FieldLabel htmlFor={field.name}>Book Summary</FieldLabel>
             <Textarea placeholder="Book summary" {...field} rows={5} className="book-form_input" />
           </Field>
         )}
       />
-      <Button type="submit" className="book-form_btn text-white">
+      <Button type="submit" className="book-form_btn bg-app-primary-admin hover:bg-app-primary-admin/80 cursor-pointer text-white">
         Add Book to Library
       </Button>
 

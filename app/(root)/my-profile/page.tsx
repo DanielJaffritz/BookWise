@@ -1,9 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { sampleBooks } from "@/constants";
 import BookList from "@/features/root/components/BookList";
-import { signOut } from "@/lib/auth";
+import { auth, signOut } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { db } from "@/prisma/db";
 
-export default function MyProfile() {
+export default async function MyProfile() {
+  const session = await auth()
+  if (!session.user) return;
+  const borrows = await db.orm.public.User.where({
+    id: session.user.id
+  }).include("borrows").first()
+  console.log(borrows)
   return (
     <>
       <form action={async () => {
@@ -14,7 +22,6 @@ export default function MyProfile() {
       >
         <Button type="submit">Logout</Button>
       </form>
-      <BookList title="borrowed books" books={sampleBooks} />
     </>
   )
 }

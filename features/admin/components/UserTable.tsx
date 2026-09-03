@@ -1,36 +1,31 @@
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Combobox, ComboboxContent, ComboboxInput, ComboboxItem, ComboboxList } from "@/components/ui/combobox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { auth } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
 import { getInitials } from "@/lib/utils";
 import { format } from "date-fns"
 import IdDialog from "./IdDialog";
 import RequestDialog from "./RequestDialog";
+import { db } from "@/prisma/db";
 
 interface Props {
   type: "ApproveRequest" | "AllUsers"
 }
 
 export default async function UserTable({ type }: Props) {
-  const session = await auth()
   const users = type === "AllUsers"
-    ? await prisma.user.findMany({
-      where: {
-        AND: [
-          { role: "USER" },
-          { status: "APPROVED" }
-        ]
-      },
-      orderBy: { createdAt: "desc" },
-      include: { borrows: true }
+    ? await db.orm.public.User.where({
+      role: "USER",
+      status: "APPROVED"
     })
-    : await prisma.user.findMany({
-      where: { status: "PENDING" },
-      orderBy: { createdAt: "desc" },
-      include: { borrows: true }
+      .include("borrows")
+      .orderBy((p) => p.createdAt.desc())
+      .all()
+    : await db.orm.public.User.where({
+      status: "PENDING"
     })
+      .orderBy((p) => p.createdAt.desc())
+      .include("borrows")
+      .all()
   return (
     <Table>
       <TableHeader className="table-header">
@@ -59,7 +54,7 @@ export default async function UserTable({ type }: Props) {
                 <p className="text-gray-400">{user.email}</p>
               </div>
             </TableCell>
-            <TableCell>{format(user.createdAt.toDateString(), "MMM d yyyy")}</TableCell>
+            <TableCell>{format(user.createdAt, "MMM d yyyy")}</TableCell>
             {type === "AllUsers" && <TableCell><p className={user.role === "ADMIN" ? `bg-red-50 text-red-400 rounded-full p-2` : `bg-green-50 text-green-400 rounded-full p-2`}>{user.role.charAt(0) + user.role.slice(1).toLowerCase()}</p></TableCell>}
             {type === "AllUsers" && <TableCell>{user.borrows.length}</TableCell>}
             <TableCell>{user.universityId}</TableCell>

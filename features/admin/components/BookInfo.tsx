@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 interface Props extends Book {
-  createdAt: Date
+  createdAt: string
 }
 
 export default function BookInfo({ id, title, author, genre, summary, coverColor, coverUrl, videoUrl, createdAt }: Props) {
@@ -20,7 +20,7 @@ export default function BookInfo({ id, title, author, genre, summary, coverColor
         </div>
         <div className="flex flex-col gap-6 w-1/3">
           <p className="text-gray-400 font-semibold">
-            Created at: <span className="text-gray-600 font-semibold">{format(createdAt.toDateString(), "MM/dd/yyyy")}</span>
+            Created at: <span className="text-gray-600 font-semibold">{format(createdAt, "MM/dd/yyyy")}</span>
           </p>
           <h1 className="text-4xl font-bold">
             {title}

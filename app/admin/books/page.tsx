@@ -7,7 +7,7 @@ export default function Books() {
     <section className="w-full rounded-2xl bg-white p-7">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-xl font-semibold">All Books</h2>
-        <Button className="bg-app-primary-admin">
+        <Button className="bg-app-primary-admin hover:bg-app-primary-admin/80">
           <Link href="/admin/books/new" className="text-app-light-100">
             Create a New Book
           </Link>

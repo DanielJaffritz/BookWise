@@ -1,16 +1,23 @@
 import Image from "next/image";
 import BookCover from "./BookCover";
 import BorrowButton from "./BorrowButton";
-import { prisma } from "@/lib/prisma";
+import ReturnButton from "./ReturnButton";
+import { db } from "@/prisma/db";
 interface Props extends Book {
   userId: string;
 }
 
 export default async function BookOverview({ id, title, author, genre, rating, totalCopies, availableCopies, description, coverColor, coverUrl, userId }: Props) {
-  const user = await prisma.user.findUnique({
-    where: { id: userId }
+  const user = await db.orm.public.User.first({
+    id: userId
   })
+  const book = await db.orm.public.Borrow.where({
+    userId: userId,
+    bookId: id
+  }).select("status").first()
+  console.log(book)
   if (!user) return null;
+  const isBorrowed = book?.status === "BORROWED"
   const borrowingEligibility = {
     isEligible: availableCopies > 0 && user.status === 'APPROVED',
     message: availableCopies <= 0 ? "Book is not available" : "You are not elegible for borrowing this book"
@@ -42,7 +49,8 @@ export default async function BookOverview({ id, title, author, genre, rating, t
           </p>
         </div>
         <p className="book-description">{description}</p>
-        <BorrowButton bookId={id} userId={userId} borrowingEligibility={borrowingEligibility} />
+        {isBorrowed ? <ReturnButton bookId={id} userId={userId} availableCopies={availableCopies} /> :
+          <BorrowButton bookId={id} userId={userId} borrowingEligibility={borrowingEligibility} />}
 
       </div>
       <div className="relative flex flex-1 justify-center">

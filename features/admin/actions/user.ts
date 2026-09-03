@@ -1,21 +1,22 @@
 "use server"
 
-import { prisma } from "@/lib/prisma"
+import { db } from "@/prisma/db"
 
 export async function DeleteUser(userId: string | undefined) {
   try {
-    const deletion = await prisma.user.delete({
-      where: { id: userId }
-    })
+    await db.orm.public.User.where({
+      id: userId
+    }).delete()
   } catch (error) {
     console.log(error)
   }
 }
 export async function approveUser(userId: string | undefined) {
   try {
-    const approve = await prisma.user.update({
-      where: { id: userId },
-      data: { status: "APPROVED" }
+    await db.orm.public.User.where({
+      id: userId
+    }).update({
+      status: "APPROVED"
     })
   } catch (error) {
     console.log(error)
@@ -23,9 +24,10 @@ export async function approveUser(userId: string | undefined) {
 }
 export async function rejectUser(userId: string | undefined) {
   try {
-    const reject = await prisma.user.update({
-      where: { id: userId },
-      data: { status: "REJECTED" }
+    await db.orm.public.User.where({
+      id: userId
+    }).update({
+      status: "REJECTED"
     })
   } catch (error) {
     console.log(error)

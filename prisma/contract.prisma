@@ -1,0 +1,87 @@
+// use prisma-next
+// Contract inferred from the live database schema. Edit as needed, then run `prisma contract emit`.
+
+namespace public {
+  model Book {
+    id              String       @id(map: "Book_pkey") @default(uuid())
+    title           String
+    author          String
+    genre           String
+    rating          Int
+    coverUrl        String
+    coverColor      String
+    description     String
+    totalCopies     Int          @default(1)
+    availableCopies Int          @default(0)
+    videoUrl        String
+    summary         String
+    createdAt       DateString @default(now())
+    borrows         Borrow[]
+
+    @@index([id], map: "Book_id_key", unique: true)
+  }
+
+  model User {
+    id               String          @id(map: "User_pkey") @default(uuid())
+    fullName         String
+    email            String
+    universityId     Int
+    password         String
+    universityCard   String
+    status           pg.enum(Status) @default("PENDING")
+    role             pg.enum(Role)   @default("USER")
+    lastActivityDate DateString    @default(now())
+    createdAt        DateString    @default(now())
+    borrows          Borrow[]
+
+    @@index([email], map: "User_email_key", unique: true)
+    @@index([id], map: "User_id_key", unique: true)
+    @@index([universityCard], map: "User_universityCard_key", unique: true)
+    @@index([universityId], map: "User_universityId_key", unique: true)
+  }
+
+  model Borrow {
+    id         String                @id(map: "Borrow_pkey") @default(uuid())
+    userId     String
+    bookId     String
+    borrowDate DateString @default(now())
+    dueDate    DateString
+    returnDate DateString?
+    status     pg.enum(BorrowStatus) @default("BORROWED")
+    createdAt  DateString         @default(now())
+    book       Book                  @relation(fields: [bookId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "Borrow_bookId_fkey", index: false)
+    user       User                  @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "Borrow_userId_fkey", index: false)
+
+    @@index([id], map: "Borrow_id_key", unique: true)
+    @@index([userId, bookId], map: "Borrow_ids_keys", unique: true)
+  }
+
+  model PrismaMigrations {
+    id                VarChar(36)  @id(map: "_prisma_migrations_pkey")
+    checksum          VarChar(64)
+    finishedAt        Timestamptz? @map("finished_at")
+    migrationName     VarChar(255) @map("migration_name")
+    logs              String?
+    rolledBackAt      Timestamptz? @map("rolled_back_at")
+    startedAt         Timestamptz  @default(now()) @map("started_at")
+    appliedStepsCount Int          @default(0) @map("applied_steps_count")
+
+    @@map("_prisma_migrations")
+  }
+
+  native_enum BorrowStatus {
+    BORROWED = "BORROWED"
+    RETURNED = "RETURNED"
+  }
+
+  native_enum Role {
+    USER = "USER"
+    ADMIN = "ADMIN"
+  }
+
+  native_enum Status {
+    PENDING = "PENDING"
+    APPROVED = "APPROVED"
+    REJECTED = "REJECTED"
+  }
+}

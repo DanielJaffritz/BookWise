@@ -1,13 +1,12 @@
 import BookForm from "@/features/admin/components/forms/BookForm";
 import { prisma } from "@/lib/prisma";
+import { db } from "@/prisma/db";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function Edit({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const book = await prisma.book.findUnique({
-    where: { id }
-  })
+  const book = await db.orm.public.Book.first({id})
   if (!book) redirect("/404")
   const defaultValues = {
     title: book.title,

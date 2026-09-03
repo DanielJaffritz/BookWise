@@ -1,15 +1,13 @@
 "use server";
 
-import { prisma } from "@/lib/prisma";
 import { BookParams } from "../types/adminProps";
+import { db } from "@/prisma/db";
 
 export async function createBook(params: BookParams) {
   try {
-    const newBook = await prisma.book.create({
-      data: {
-        ...params,
-        availableCopies: params.totalCopies
-      }
+    const newBook = await db.orm.public.Book.create({
+      ...params,
+      availableCopies: params.totalCopies
     })
     return {
       success: true,
@@ -30,12 +28,11 @@ interface Props extends BookParams {
 }
 export async function updateBook(params: Props) {
   try {
-    const updateBook = await prisma.book.update({
-      where: { id: params.id },
-      data: {
-        ...params,
-        availableCopies: params.totalCopies
-      }
+    const updateBook = await db.orm.public.Book.where({
+      id: params.id
+    }).update({
+      ...params,
+      availableCopies: params.totalCopies
     })
     return {
       success: true,
@@ -52,9 +49,9 @@ export async function updateBook(params: Props) {
 }
 export async function deleteBook(bookId: string | undefined) {
   try {
-    const deletion = await prisma.book.delete({
-      where: { id: bookId }
-    })
+    await db.orm.public.Book.where({
+      id: bookId
+    }).delete()
   } catch (error) {
     console.log(error)
   }
