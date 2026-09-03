@@ -7,7 +7,7 @@ import { db } from "@/prisma/db";
 
 export default async function MyProfile() {
   const session = await auth()
-  if (!session.user) return;
+  if (!session?.user) return;
   const borrows = await db.orm.public.User.where({
     id: session.user.id
   }).include("borrows").first()
