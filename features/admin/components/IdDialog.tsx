@@ -1,5 +1,5 @@
 "use client"
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import config from "@/lib/config";
 import { Image as IkImage } from "@imagekit/next";
 import Image from "next/image";

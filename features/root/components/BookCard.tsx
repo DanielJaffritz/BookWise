@@ -1,8 +1,5 @@
 import Link from "next/link";
 import BookCover from "./BookCover";
-import { cn } from "@/lib/utils";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
 
 export default function BookCard({ id, title, genre, coverColor, coverUrl}: Book) {
   return (

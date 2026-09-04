@@ -1,5 +1,5 @@
 "use client"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback} from "@/components/ui/avatar";
 import { cn, getInitials } from "@/lib/utils";
 import { Session } from "next-auth";
 import Image from "next/image";

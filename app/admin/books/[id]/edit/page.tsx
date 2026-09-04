@@ -1,5 +1,4 @@
 import BookForm from "@/features/admin/components/forms/BookForm";
-import { prisma } from "@/lib/prisma";
 import { db } from "@/prisma/db";
 import Link from "next/link";
 import { redirect } from "next/navigation";

@@ -1,4 +1,3 @@
-import { prisma } from "@/lib/prisma"
 import { db } from "@/prisma/db"
 
 export default async function Count() {

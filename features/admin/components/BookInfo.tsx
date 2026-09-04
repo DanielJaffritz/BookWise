@@ -3,7 +3,6 @@ import BookCover from "@/features/root/components/BookCover";
 import config from "@/lib/config";
 import { Video } from "@imagekit/next";
 import { format } from "date-fns";
-import Image from "next/image";
 import Link from "next/link";
 
 interface Props extends Book {

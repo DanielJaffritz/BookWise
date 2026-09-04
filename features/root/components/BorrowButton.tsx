@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/toast";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import { useState } from "react";
 import { borrowBook } from "../actions/book";
 interface Props extends BorrowBookParams {
