@@ -4,7 +4,6 @@ import { ReactNode } from "react";
 import "@/styles/admin.css";
 import Sidebar from "@/features/admin/components/sidebar";
 import Header from "@/features/admin/components/header";
-import { prisma } from "@/lib/prisma";
 import { db } from "@/prisma/db";
 
 export default async function layout({ children }: { children: ReactNode }) {
