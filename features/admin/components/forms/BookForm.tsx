@@ -17,6 +17,7 @@ import { toast } from "@/components/ui/toast";
 export default function BookForm({ defaultValues, type, id, ...book }: Props) {
   const router = useRouter();
   const form = useForm<z.infer<typeof bookSchema>>({
+    //@ts-expect-error
     resolver: zodResolver(bookSchema),
     defaultValues
 
@@ -42,6 +43,7 @@ export default function BookForm({ defaultValues, type, id, ...book }: Props) {
   }
 
   return (
+    //@ts-expect-error
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
       <Controller
         name={"title"}
