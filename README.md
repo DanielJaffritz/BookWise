@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Welcome to BookWise
+
+An university library to keep track of books and students
+
+If you want to use admin functionalities, login with user "admin" and password "bookwise1234"\
+[visit it here](https://book-wise-zeta-one.vercel.app/)
+
+## features
+
+- book library with borrow functionality.
+- full admin panel
 
 ## Getting Started
 
-First, run the development server:
+### Instalattion
+
+Clone the repo
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/DanielJaffritz/BookWise.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+I recommend installing pnpm
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install -g pnpm
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+install the dependencies
 
-## Learn More
+```bash
+pnpm install
+```
 
-To learn more about Next.js, take a look at the following resources:
+configuration:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Go to [neon database](https://neon.com/docs/guides/javascript#deleting-data) and create your own database
+- Go to [upstash](https://upstash.com/) and get your redis and qstash keys
+- Go to [ImageKit](https://imagekit.io/) and get your keys
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+get your auth secret
 
-## Deploy on Vercel
+```bash
+pnpm dlx auth secret
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+fill the .env file
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```env
+NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT="image kit url endpoint"
+NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY="image kit public key"
+IMGEKIT_PRIVATE_KEY="image kit private key"
+
+NEXT_PUBLIC_API_ENDPOINT="http://localhost:3000"
+
+DATABASE_URL="neon database url"
+
+AUTH_SECRET="generated auth secret"
+
+UPSTASH_REDIS_URL="upstash redis url"
+UPSTASH_REDIS_TOKEN="upstash redis token"
+QSTASH_URL="qstash url"
+QSTASH_TOKEN="qstash token"
+
+```
+
+update the database
+
+```bash
+pnpm dlx prisma contract emit
+```
+
+```bash
+pnpm dlx prisma db update
+```
+
+seed the database
+
+```bash
+pnpm dlx tsx seed.ts
+```
+
+run the app
+
+```bash
+pnpm dev
+```
+
+## Stack used
+
+- NextJs App Router
+- nextAuth
+- tailwindCSS
+- neon database
+- upstash redis
+- qstash
+- prisma
+- shadcn/ui
